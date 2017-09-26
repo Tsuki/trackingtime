@@ -56,9 +56,7 @@
   "defaults": {
     "styleExt": "styl",
     "component": {
-      "spec": false,
-      "inlineStyle": true,
-      "inlineTemplate": true
+      "spec": false
     },
     "directive": {
       "spec": false
@@ -77,6 +75,6 @@
     },
     "service": {
       "spec": false
-    } 
+    }
   }
 }
