@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {TrackingTimeService} from "../tracking-time.service";
-import {User} from "../interface/User";
-import {Event} from "../interface/Event";
 
 @Component({
   selector: 'app-signin',
@@ -9,7 +7,6 @@ import {Event} from "../interface/Event";
   styleUrls: ['./signin.component.styl']
 })
 export class SigningComponent implements OnInit {
-  users: User.user;
   signin = false;
   email = '';
   password = '';
@@ -24,16 +21,19 @@ export class SigningComponent implements OnInit {
 
   signing() {
     this.service.account = `${this.email}:${this.password}`;
-    this.service.getAllUsers().subscribe((user: User.user) => {
-      this.users = user;
-      this.signin = true;
-      this.service.user = user;
-      this.service.getEvents(this.users.data[0].id).subscribe((event: Event.event) => {
-        this.service.event = event;
-      })
-    }, error => {
-      console.error(error);
-    });
-
+    this.service.getAllUsers()
+      .subscribe(user => {
+        this.signin = true;
+        this.service.user = user;
+        user.data.map(it=>{return it.id});
+        user.data.forEach(user => {
+          this.service.getEvents(user.id).subscribe(event => {
+              this.service.event.concat(event)
+            }
+          ).unsubscribe();
+        })
+      }, error => {
+        console.error(error);
+      }).unsubscribe();
   }
 }
