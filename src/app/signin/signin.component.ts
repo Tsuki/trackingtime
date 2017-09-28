@@ -25,15 +25,7 @@ export class SigningComponent implements OnInit {
       .subscribe(user => {
         this.signin = true;
         this.service.user = user;
-        user.data.map(it=>{return it.id});
-        user.data.forEach(user => {
-          this.service.getEvents(user.id).subscribe(event => {
-              this.service.event.concat(event)
-            }
-          ).unsubscribe();
-        })
-      }, error => {
-        console.error(error);
+        this.service.users = user.data.map(it => it.id);
       }).unsubscribe();
   }
 }

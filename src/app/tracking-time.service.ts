@@ -12,7 +12,11 @@ export class TrackingTimeService {
   private baseUrl: string = 'https://app.trackingtime.co/api/v2';
   private _account: string;
   private header = new HttpHeaders();
+
+  private lastmonth = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
+  private yesterday = moment().format('YYYY-MM-DD');
   user: User.user;
+  users: number[];
   event: Event.event[];
 
   constructor(private http: HttpClient) {
@@ -22,16 +26,10 @@ export class TrackingTimeService {
     return this.http.get<User.user>(`${this.baseUrl}/users`, {headers: this.header});
   }
 
-  getAllEvents() {
-    this.user.data.forEach(data => {
-      this.getEvents(data.id);
-    })
-  }
-
   getEvents(userId: number) {
-    let lastmonth = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
-    let yesterday = moment().format('YYYY-MM-DD');
-    return this.http.get<Event.event>(`${this.baseUrl}/events?id=${userId}&from=${lastmonth}&to=${yesterday}&filter=USER`, {headers: this.header});
+    return this.http.get<Event.event>(
+      `${this.baseUrl}/events?id=${userId}&from=${this.lastmonth}&to=${this.yesterday}&filter=USER`,
+      {headers: this.header});
   }
 
   set account(value: string) {
